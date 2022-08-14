@@ -1,21 +1,24 @@
 package com.priesniakov.viktor.view;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.priesniakov.viktor.R;
 import com.priesniakov.viktor.databinding.FingerDrawViewBinding;
 
-public class DrawingViewGroup extends FrameLayout implements CoordinatesCallback {
+import java.util.ArrayList;
 
-    private TextView startText, moveText, endText;
+public class DrawingViewGroup extends FrameLayout {
 
-    private boolean isDebugEnabled = true;
     private FingerDrawViewBinding binding;
+    private float xDown = 0, yDown = 0;
 
     public DrawingViewGroup(Context context) {
         this(context, null);
@@ -32,22 +35,44 @@ public class DrawingViewGroup extends FrameLayout implements CoordinatesCallback
 
     private void initView() {
         binding = FingerDrawViewBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        setupEmoji();
+    }
 
-        startText = (TextView) findViewById(R.id.startPointText);
-        moveText = (TextView) findViewById(R.id.movingPointText);
-        endText = (TextView) findViewById(R.id.endPointText);
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupEmoji() {
 
-        if (isDebugEnabled) {
-            startText.setVisibility(VISIBLE);
-            moveText.setVisibility(VISIBLE);
-            endText.setVisibility(VISIBLE);
-        } else {
-            startText.setVisibility(GONE);
-            moveText.setVisibility(GONE);
-            endText.setVisibility(GONE);
+        ArrayList<ImageView> imagesList = new ArrayList<>();
+        imagesList.add(binding.smileImage);
+        imagesList.add(binding.smileImage2);
+        imagesList.add(binding.smileImage3);
+        imagesList.add(binding.smileImage4);
+        imagesList.add(binding.smileImage5);
+
+        for (ImageView draggableImage : imagesList) {
+            draggableImage.setOnClickListener(view -> {
+                ImageView image = (ImageView) LayoutInflater.from(getContext()).inflate(R.layout.item_draggable_image, binding.imagesContainer, false);
+                Drawable drawable = ((ImageView) view).getDrawable();
+                image.setImageDrawable(drawable);
+                binding.imagesContainer.addView(image);
+
+                image.setOnTouchListener((touchView, motionEvent) -> {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        xDown = motionEvent.getX();
+                        yDown = motionEvent.getY();
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        float xMove, yMove;
+                        xMove = motionEvent.getX();
+                        yMove = motionEvent.getY();
+
+                        float distX = xMove - xDown;
+                        float distY = yMove - yDown;
+                        touchView.setX(touchView.getX() + distX);
+                        touchView.setY(touchView.getY() + distY);
+                    }
+                    return true;
+                });
+            });
         }
-
-        binding.drawingView.setThisCallback(this);
     }
 
     public void changeColor(int color) {
@@ -67,24 +92,7 @@ public class DrawingViewGroup extends FrameLayout implements CoordinatesCallback
     }
 
     public void clearAllView() {
+        binding.imagesContainer.removeAllViews();
         binding.drawingView.resetView();
-        moveText.setText("0.0");
-        startText.setText("0.0");
-        endText.setText("0.0");
-    }
-
-    @Override
-    public void moving(float x, float y) {
-        moveText.setText(String.format("%.02f", x) + ", " + String.format("%.02f", y));
-    }
-
-    @Override
-    public void start(float x, float y) {
-        startText.setText(String.format("%.02f", x) + ", " + String.format("%.02f", y));
-    }
-
-    @Override
-    public void end(float x, float y) {
-        endText.setText(String.format("%.02f", x) + ", " + String.format("%.02f", y));
     }
 }

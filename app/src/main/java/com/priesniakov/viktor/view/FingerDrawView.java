@@ -6,7 +6,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,8 +18,6 @@ import java.util.ArrayList;
 
 public class FingerDrawView extends View {
 
-    private static final String PARENT_VIEW_SAVED_STATE = "parent_view";
-    private static final String CHILD_VIEW_SAVED_STATE = "child_view";
     private static final int STATE_IDLE = 0;
     private static final int STATE_MOVING = 1;
     private static int DEFAULT_COLOR;
@@ -29,8 +26,6 @@ public class FingerDrawView extends View {
     private static final int CHANGE_WIDTH_STEP = 10;
     private static final int MIN_WIDTH = 5;
     private static final int DEFAULT_LINE_WIDTH = 20;
-
-    private CoordinatesCallback coordinatesCallback;
 
     private final ArrayList<Paint> paintList = new ArrayList<>();
     private final ArrayList<Path> pathList = new ArrayList<>();
@@ -72,25 +67,17 @@ public class FingerDrawView extends View {
         return paint;
     }
 
-    public void setThisCallback(CoordinatesCallback callback) {
-        this.coordinatesCallback = callback;
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
         float y = event.getY();
-        Log.i("CO-ordinate", event.getX() + " : " + event.getY());
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            coordinatesCallback.start(x, y);
             startPath(x, y);
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            coordinatesCallback.moving(x, y);
             updatePath(x, y);
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
-            coordinatesCallback.end(x, y);
             endPath(x, y);
         }
         invalidate();
@@ -151,7 +138,6 @@ public class FingerDrawView extends View {
 
         invalidate();
     }
-
 
     public void undoPath() {
         if (paintList.size() > 1) {
