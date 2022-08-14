@@ -1,12 +1,16 @@
 package com.priesniakov.viktor;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.priesniakov.viktor.databinding.ActivityMainBinding;
+import com.priesniakov.viktor.dialog.ColorPickerDialog;
+import com.priesniakov.viktor.dialog.ColorPickerListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ColorPickerListener {
 
     private ActivityMainBinding binding;
 
@@ -19,29 +23,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        binding.resetButton.setOnClickListener(button -> resetView());
-        binding.sizeMinusButton.setOnClickListener(button -> binding.customCanvas.decreaseDrawingWidth());
-        binding.sizePlusButton.setOnClickListener(button -> binding.customCanvas.increaseDrawingWidth());
-        binding.undoButton.setOnClickListener(v -> binding.customCanvas.removeLastPaintedView());
+        binding.cleanAllDrawing.setOnClickListener(button -> resetView());
+        binding.decreaseWidth.setOnClickListener(button -> binding.customCanvas.decreaseDrawingWidth());
+        binding.increaseWidth.setOnClickListener(button -> binding.customCanvas.increaseDrawingWidth());
+        binding.undoDrawing.setOnClickListener(v -> binding.customCanvas.removeLastPaintedView());
 
-//        binding.colorButton.setOnClickListener(v -> {
-//
-//            ColorChooserDialog dialog = new ColorChooserDialog(DrawFromFingerActivity.this);
-//            dialog.setTitle("Select Color");
-//            dialog.setColorListener(new ColorListener() {
-//                @Override
-//                public void OnColorClick(View v, int color) {
-//                    //do whatever you want to with the values
-//                    customCanvasForDraw.changeColor(color);
-//                }
-//            });
-//            //customize the dialog however you want
-//            dialog.show();
-//        });
-
+        binding.changeColor.setOnClickListener(v -> {
+            ColorPickerDialog dialog = ColorPickerDialog.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            dialog.show(fragmentManager, ColorPickerDialog.TAG);
+        });
     }
 
     private void resetView() {
         binding.customCanvas.clearAllView();
+    }
+
+    @Override
+    public void setColor(int color) {
+        binding.customCanvas.changeColor(color);
     }
 }

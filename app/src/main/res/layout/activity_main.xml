@@ -1,60 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/resetButton"
-        android:text="reset"
-        android:layout_alignParentBottom="true"
-        android:textSize="18sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:id="@+id/topButtonView"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/increaseWidth"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_increase_width"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/decreaseWidth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeColor"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-        <Button
-            android:id="@+id/sizeMinusButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="A-" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/changeColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_change_color"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/increaseWidth"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/customCanvas"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@null"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-        <Button
-            android:id="@+id/sizePlusButton"
-            android:text="A+"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/decreaseWidth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_decrease_width"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/undoDrawing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/increaseWidth"
+        app:tint="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/undoDrawing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_undo_drawing"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/cleanAllDrawing"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/decreaseWidth"
+        app:tint="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
-        <Button
-            android:id="@+id/colorButton"
-            android:text="Color"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-
-
-        <Button
-            android:id="@+id/undoButton"
-            android:text="undo"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cleanAllDrawing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_clean_canvas"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/undoDrawing"
+        app:tint="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <com.priesniakov.viktor.view.DrawingViewGroup
         android:id="@+id/customCanvas"
-        android:layout_below="@id/topButtonView"
-        android:layout_above="@id/resetButton"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
